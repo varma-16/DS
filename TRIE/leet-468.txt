@@ -1,0 +1,60 @@
+class Trie{
+    Trie arr[];
+    boolean isEnd;
+    String word;
+    Trie(){
+        arr=new Trie[26];
+        isEnd=false;
+    }
+}
+class Solution {
+    static Trie root;
+    public static void insert(String word){
+        Trie temp=root;
+        for(char i:word.toCharArray()){
+            if(temp.arr[i-'a']==null){
+                // need to be create new Trie Node there;
+                temp.arr[i-'a']=new Trie();
+            }
+            temp=temp.arr[i-'a']; // i made the mistake where I need to move to next node;
+        }
+        temp.isEnd=true;
+            // after ending the string i marked it as end and also I have to give it as string;
+        temp.word=word;
+        
+    }
+
+    public static String find(String word){
+        // check whether the string is there or not;
+        Trie temp=root;
+        for(char i:word.toCharArray()){
+             if(temp.isEnd==true){
+                return temp.word;
+            }
+            if(temp.arr[i-'a']==null){
+                return word;
+            }
+            temp=temp.arr[i-'a'];
+            // example   mama  -> mamam  ans is mama   first prefix is okay here
+        }
+        return word; // if in case the value is not there ;
+    }
+
+    public String replaceWords(List<String> dictionary, String sentence) {
+        root=new Trie();
+        for(String i:dictionary){
+            // add to trie datastructure;
+            insert(i);
+        }
+        // make sentence into words;
+        String words[]=sentence.split(" ");
+        // call the find , but here if it returns the boolean that may not give the solution;
+        // its better to take the string as return type for find();
+        String res="";
+        for(String i:words){
+           
+            res+=" "+find(i);
+        }
+        return res.substring(1);
+    }
+}
